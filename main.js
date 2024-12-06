@@ -42,16 +42,78 @@ const arrayCartas = [
     color: 'black',
   },
 ];
-const seleccionar = (carta, color) => {
-  carta.style.backgroundColor = color;
-  carta.style.backgorundImage = 'none';
-};
+
+let contador = 0;
+let carta1;
+let carta2;
+let puntuacion = 0;
+
+arrayCartas.sort(() => Math.random() - Math.random())
 
 const divApp = document.querySelector('#app');
 
-arrayCartas.forEach((carta) => {
-  const divCarta = document.createElement('div');
-  divCarta.className = 'carta';
-  divCarta.addEventListener('click', () => seleccionar(divCarta, carta.color));
-  divApp.appendChild(divCarta);
+const puntuacionHTML = document.createElement('H3');
+
+puntuacionHTML.textContent = `Puntuacion: ` + puntuacion;
+
+document.body.insertBefore(puntuacionHTML, divApp);
+
+const resetearValores = () => {
+  contador = 0;
+  carta1 = undefined;
+  carta2 = undefined;
+};
+
+const resetearCarta = (cartaGenerica) => {
+  cartaGenerica.nodoHTML.style.backgroundColor = '#447450';
+  cartaGenerica.nodoHTML.style.backgroundImage =
+    'url(https://www.transparenttextures.com/patterns/argyle.png)';
+};
+
+const comprobar = () => {
+  if (carta1.datosCarta.color === carta2.datosCarta.color) {
+    puntuacion++;
+    resetearValores();
+  } else {
+    puntuacion--;
+    setTimeout(() => {
+      resetearCarta(carta1);
+      resetearCarta(carta2);
+      resetearValores();
+    }, 500);
+  }
+  puntuacionHTML.textContent = `Puntuacion: ` + puntuacion;
+};
+
+const seleccionar = (divCartaNodoHTML, datosDeCadaCarta) => {
+  if (contador < 2) {
+    contador++;
+    console.log('cartas seleccionadas: ' + contador);
+    divCartaNodoHTML.style.backgroundColor = datosDeCadaCarta.color;
+    divCartaNodoHTML.style.backgorundImage = 'none';
+  }
+  if (contador === 1) {
+    carta1 = {
+      nodoHTML: divCartaNodoHTML,
+      datosCarta: datosDeCadaCarta,
+    };
+    console.log(carta1);
+  }
+  if (contador === 2) {
+    carta2 = {
+      nodoHTML: divCartaNodoHTML,
+      datosCarta: datosDeCadaCarta,
+    };
+    console.log(carta2);
+    comprobar();
+  }
+};
+
+arrayCartas.forEach((datosDeCadaCarta) => {
+  const divCartaNodoHTML = document.createElement('div');
+  divCartaNodoHTML.className = 'carta';
+  divCartaNodoHTML.addEventListener('click', () =>
+    seleccionar(divCartaNodoHTML, datosDeCadaCarta)
+  );
+  divApp.appendChild(divCartaNodoHTML);
 });
