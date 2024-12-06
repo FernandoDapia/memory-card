@@ -28,3 +28,10 @@ h3 {
   text-align: center;
   padding-top: 50px;
 }
+
+@media (max-width: 450px) {
+  .carta {
+    width: 80px;
+    height: 140px;
+  }
+}
